@@ -3,16 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
-  "main": "src/start.js",
+  "main": "public/electron.js",
   "dependencies": {
+    "classnames": "^2.2.6",
     "electron": "^4.0.5",
+    "electron-oauth2": "^3.0.0",
     "eslint": "^5.14.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
+    "oauth-electron": "^1.1.12",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
+    "react-dropzone": "^9.0.0",
     "react-scripts": "2.1.5"
   },
   "scripts": {
@@ -22,7 +26,7 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron-start": "node src/start-react",
-    "react-start": "react-scripts start",
+    "react-start": "BROWSER=none react-scripts start",
     "pack": "build --dir",
     "dist": "npm run build && build",
     "postinstall": "install-app-deps"
