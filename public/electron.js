@@ -2,6 +2,7 @@ const { app, ipcMain, BrowserWindow, webContents } = require("electron");
 
 // const path = require("path");
 // const url = require("url");
+const jsonConfig = require("electron-json-config");
 
 const myConfig = require("../src/config");
 
@@ -10,6 +11,8 @@ let mainWindow, authWindow;
 // Functions to create windows - main, auth.
 function createWindow() {
   mainWindow = new BrowserWindow({ width: 800, height: 600 });
+
+  const accessToken = jsonConfig.get("pbAccessToken");
 
   mainWindow.loadURL(
     // Commendted out the below code so I could have console.log
@@ -87,4 +90,6 @@ ipcMain.on("tokenReceived", (_, tokenReceived) => {
   const success = JSON.parse(tokenReceived);
   console.log(success);
   console.log(success.access_token);
+
+  jsonConfig.set("pbAccessToken", success.access_token);
 });
