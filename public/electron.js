@@ -12,8 +12,6 @@ let mainWindow, authWindow;
 function createWindow() {
   mainWindow = new BrowserWindow({ width: 800, height: 600 });
 
-  const accessToken = jsonConfig.get("pbAccessToken");
-
   mainWindow.loadURL(
     // Commendted out the below code so I could have console.log
     "http://localhost:3000"
@@ -24,6 +22,11 @@ function createWindow() {
     //     slashes: true
     //   })
   );
+
+  mainWindow.webContents.on("did-finish-load", () => {
+    const accessToken = jsonConfig.get("pbAccessToken");
+    mainWindow.webContents.send("tokenReceived", accessToken);
+  });
 
   mainWindow.on("closed", () => {
     mainWindow = null;
