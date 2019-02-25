@@ -91,8 +91,6 @@ ipcMain.on("podbeanOAuth", () => {
 
 ipcMain.on("tokenReceived", (_, tokenReceived) => {
   const success = JSON.parse(tokenReceived);
-  console.log(success);
-  console.log(success.access_token);
-
   jsonConfig.set("pbAccessToken", success.access_token);
+  mainWindow.webContents.send("tokenReceived", success.access_token);
 });
