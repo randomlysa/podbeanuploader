@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 
 import Login from "./Login";
-import Upload from "./Upload";
+import Home from "./Home";
+
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -17,7 +18,11 @@ class App extends Component {
   }
 
   render() {
-    return <Login />;
+    if (this.state.haveToken) {
+      return <Home />;
+    } else {
+      return <Login />;
+    }
   }
 }
 
