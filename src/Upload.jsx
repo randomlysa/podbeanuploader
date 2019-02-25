@@ -1,15 +1,30 @@
 import React from "react";
-import Dropzone from "react-dropzone";
-import styled from "@emotion/styled";
+import XHRUpload from "@uppy/xhr-upload";
 
-const getColor = props => {
-  if (props.isDragReject) {
-    return "#c66";
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
+
+const Uppy = require("@uppy/core");
+const { DragDrop } = require("@uppy/react");
+
+// Upload process:
+// Drop file into Uppy dropzone
+// .send("authorizeUploadFile"): Uppy sends filename, filesize to Node/Electron.
+// Node/Electron authorizes a file upload using filename, filesize.
+// .send("gotTheKey"): Node sends back a presigned_url and media_key
+// Uppy uploads the file to the presigned_url
+// .send("publishEpisode"): Uppy sends media_key to node.
+// NOTE - stopping here as I can't test this as I've reached up upload limit for the day.
+// Node posts to https://api.podbean.com/v1/episodes with the info needed to publish.
+
+const uppy = Uppy({
+  autoProceed: true,
+  restrictions: {
+    maxNumberOfFiles: 1,
+    allowedFileTypes: [".mp3"]
   }
-  if (props.isDragActive) {
-    return "#6c6";
-  }
-  return "#666";
+});
+
 };
 
 const Container = styled.div`
