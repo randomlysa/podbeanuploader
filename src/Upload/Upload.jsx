@@ -28,11 +28,6 @@ const uppy = Uppy({
 });
 
 class Upload extends React.Component {
-  state = {
-    acceptedFiles: [],
-    filePath: ""
-  };
-
   componentDidMount() {
     uppy.on("file-added", file => {
       const path = file.data.path
