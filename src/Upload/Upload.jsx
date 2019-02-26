@@ -65,6 +65,9 @@ class Upload extends React.Component {
       uppy.upload().then(result => {
         console.info("Successful uploads:", result.successful);
 
+        // Set uploadSucceeded to true so the file can be renamed.
+        this.props.setUploadSucceeded(true);
+
         // upload successful, need to post some data to publish it.
         // ipcRenderer.send("publishEpisode", data.media_key);
 

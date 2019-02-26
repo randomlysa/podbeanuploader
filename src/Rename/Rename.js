@@ -16,10 +16,27 @@ const Rename = props => {
     if (e.target.id === "day") setDay(e.target.value);
   };
 
+  const sendRename = newFileName => {
+    ipcRenderer.send("renameFile", props.fileName, props.filePath, newFileName);
+  };
+
   const handleFormSubmit = e => {
+    // Probably best to call upload, then call rename.
     e.preventDefault();
     const newFileName = `${title} - ${speaker} - ${time} - ${day}`;
-    ipcRenderer.send("renameFile", props.fileName, props.filePath, newFileName);
+
+    if (props.uploadSucceeded === true) {
+      console.log("can rename");
+      sendRename(newFileName);
+    } else {
+      console.log("canoot rename");
+      setTimeout(() => {
+        if (props.uploadSucceeded === true) {
+          console.log("can rename now");
+          sendRename(newFileName);
+        }
+      }, 5000);
+    }
   };
 
   return (
