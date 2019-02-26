@@ -34,6 +34,8 @@ class Upload extends React.Component {
 
   componentDidMount() {
     uppy.on("file-added", file => {
+      this.props.setShowRename(true);
+
       const dataForElectron = {
         filesize: file.size,
         filename: file.name

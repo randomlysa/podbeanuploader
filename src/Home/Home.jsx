@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Upload from "../Upload/Upload";
+import Rename from "../Rename/Rename";
 
 const Home = () => {
+  const [showRename, setShowRename] = useState(false);
+
   // Have - Logout - Settings - Upload
   return (
     <div>
       Home
       <br />
-      <Upload />
+      <Upload setShowRename={setShowRename} />
+      {showRename && <Rename />}
     </div>
   );
 };
