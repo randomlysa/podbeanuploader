@@ -25,55 +25,68 @@ const uppy = Uppy({
   }
 });
 
-};
+uppy.on("file-added", file => {
+  const dataForElectron = {
+    filesize: file.size,
+    filename: file.name
+  };
 
-const Container = styled.div`
-  box-sizing: border-box;
-  display: flex;
+  // Todo: not sure if this is the best place to do this...
+  // assuming people drop in the right file most of the time?
+  ipcRenderer.send("authorizeUploadFile", dataForElectron);
 
-  justify-content: center;
-  align-items: center;
+  // Todo: is this needed?
+  uppy.setFileMeta(file.id, {
+    filename: file.name,
+    filesize: file.size,
+    content_type: "audio/mpeg"
+  });
+});
 
-  width: 100%;
-  height: 300px;
-  border-width: 2px;
-  border-radius: 5px;
-  border-color: ${props => getColor(props)};
-  border-style: ${props =>
-    props.isDragReject || props.isDragActive ? "solid" : "dashed"};
-  background-color: ${props => (props.isDragReject ? "#de4545" : "#eee")};
-`;
+ipcRenderer.on("gotTheKey", (event, data) => {
+  uppy.use(XHRUpload, {
+    method: "put",
+    endpoint: data.presigned_url
+  });
+
+  uppy.upload().then(result => {
+    console.info("Successful uploads:", result.successful);
+
+    // upload successful, need to post some data to publish it.
+    ipcRenderer.send("publishEpisode", data.media_key);
+
+    if (result.failed.length > 0) {
+      console.error("Errors:");
+      result.failed.forEach(file => {
+        console.error(file.error);
+      });
+    }
+  });
+});
+
+uppy.on("upload-success", (file, body) => {
+  console.log("success, ", file, body);
+});
 
 class Upload extends React.Component {
-  onDrop = (acceptedFiles, rejectedFiles) => {
-    console.log(acceptedFiles, rejectedFiles);
+  state = {
+    acceptedFiles: []
   };
 
   render() {
     return (
-      <>
-        <Dropzone accept="audio/mp3" onDrop={this.onDrop}>
-          {({
-            getRootProps,
-            getInputProps,
-            isDragActive,
-            isDragAccept,
-            isDragReject,
-            acceptedFiles
-          }) => {
-            return (
-              <Container
-                isDragActive={isDragActive}
-                isDragReject={isDragReject}
-                {...getRootProps()}
-              >
-                <input {...getInputProps()} />
-                {isDragAccept ? "Drop" : "Drag"} files here...
-              </Container>
-            );
-          }}
-        </Dropzone>
-      </>
+      <DragDrop
+        uppy={uppy}
+        locale={{
+          strings: {
+            // Text to show on the droppable area.
+            // `%{browse}` is replaced with a link that opens the system file selection dialog.
+            dropHereOr: "Drop here or %{browse}",
+            // Used as the label for the link that opens the system file selection dialog.
+            browse: "browse"
+          }
+        }}
+      />
     );
   }
 }
