@@ -120,3 +120,20 @@ ipcMain.on("authorizeUploadFile", (event, file) => {
   } // if(file)
 });
 
+ipcMain.on("publishEpisode", (event, media_key) => {
+  axios({
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    method: "post",
+    url: "https://api.podbean.com/v1/episodes",
+    data: {
+      access_token: jsonConfig.get("pbAccessToken"),
+      title: "Title_Needs_To_Be_5_Chars",
+      content: "Time", // do I Need this?
+      status: "publish",
+      type: "public",
+      media_key: `"${media_key}"`
+    }
+  })
+    .then(d => console.warn(d))
+    .catch(err => console.log(err));
+});
