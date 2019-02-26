@@ -1,5 +1,5 @@
 import React from "react";
-import * as config from "./config.js";
+import * as config from "../config.js";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;

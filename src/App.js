@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-import Login from "./Login";
-import Home from "./Home";
+import Login from "./Login/Login";
+import Home from "./Home/Home";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;

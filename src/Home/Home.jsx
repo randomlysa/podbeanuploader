@@ -1,6 +1,6 @@
 import React from "react";
 
-import Upload from "./Upload";
+import Upload from "../Upload/Upload";
 
 const Home = () => {
   // Have - Logout - Settings - Upload

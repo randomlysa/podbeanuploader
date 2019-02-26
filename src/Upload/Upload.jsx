@@ -35,7 +35,8 @@ uppy.on("file-added", file => {
 
   // Todo: not sure if this is the best place to do this...
   // assuming people drop in the right file most of the time?
-  ipcRenderer.send("authorizeUploadFile", dataForElectron);
+
+  // ipcRenderer.send("authorizeUploadFile", dataForElectron);
 
   // Todo: is this needed?
   uppy.setFileMeta(file.id, {
@@ -55,7 +56,7 @@ ipcRenderer.on("gotTheKey", (event, data) => {
     console.info("Successful uploads:", result.successful);
 
     // upload successful, need to post some data to publish it.
-    ipcRenderer.send("publishEpisode", data.media_key);
+    // ipcRenderer.send("publishEpisode", data.media_key);
 
     if (result.failed.length > 0) {
       console.error("Errors:");
