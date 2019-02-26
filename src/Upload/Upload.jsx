@@ -27,54 +27,55 @@ const uppy = Uppy({
   }
 });
 
-uppy.on("file-added", file => {
-  const dataForElectron = {
-    filesize: file.size,
-    filename: file.name
-  };
-
-  // Todo: not sure if this is the best place to do this...
-  // assuming people drop in the right file most of the time?
-
-  // ipcRenderer.send("authorizeUploadFile", dataForElectron);
-
-  // Todo: is this needed?
-  uppy.setFileMeta(file.id, {
-    filename: file.name,
-    filesize: file.size,
-    content_type: "audio/mpeg"
-  });
-});
-
-ipcRenderer.on("gotTheKey", (event, data) => {
-  uppy.use(XHRUpload, {
-    method: "put",
-    endpoint: data.presigned_url
-  });
-
-  uppy.upload().then(result => {
-    console.info("Successful uploads:", result.successful);
-
-    // upload successful, need to post some data to publish it.
-    // ipcRenderer.send("publishEpisode", data.media_key);
-
-    if (result.failed.length > 0) {
-      console.error("Errors:");
-      result.failed.forEach(file => {
-        console.error(file.error);
-      });
-    }
-  });
-});
-
-uppy.on("upload-success", (file, body) => {
-  console.log("success, ", file, body);
-});
-
 class Upload extends React.Component {
   state = {
     acceptedFiles: []
   };
+
+  componentDidMount() {
+    uppy.on("file-added", file => {
+      const dataForElectron = {
+        filesize: file.size,
+        filename: file.name
+      };
+
+      // Todo: not sure if this is the best place to do this...
+      // assuming people drop in the right file most of the time?
+      // ipcRenderer.send("authorizeUploadFile", dataForElectron);
+
+      // Todo: is this needed?
+      uppy.setFileMeta(file.id, {
+        filename: file.name,
+        filesize: file.size,
+        content_type: "audio/mpeg"
+      });
+    });
+
+    ipcRenderer.on("gotTheKey", (event, data) => {
+      uppy.use(XHRUpload, {
+        method: "put",
+        endpoint: data.presigned_url
+      });
+
+      uppy.upload().then(result => {
+        console.info("Successful uploads:", result.successful);
+
+        // upload successful, need to post some data to publish it.
+        // ipcRenderer.send("publishEpisode", data.media_key);
+
+        if (result.failed.length > 0) {
+          console.error("Errors:");
+          result.failed.forEach(file => {
+            console.error(file.error);
+          });
+        }
+      });
+    });
+
+    uppy.on("upload-success", (file, body) => {
+      console.log("success, ", file, body);
+    });
+  }
 
   render() {
     return (
