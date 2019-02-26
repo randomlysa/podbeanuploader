@@ -1,4 +1,5 @@
 const { app, ipcMain, BrowserWindow, webContents } = require("electron");
+const axios = require("axios");
 
 // const path = require("path");
 // const url = require("url");
@@ -94,3 +95,28 @@ ipcMain.on("tokenReceived", (_, tokenReceived) => {
   jsonConfig.set("pbAccessToken", success.access_token);
   mainWindow.webContents.send("tokenReceived", success.access_token);
 });
+
+ipcMain.on("authorizeUploadFile", (event, file) => {
+  const { filename, filesize } = file;
+  if (file) {
+    axios({
+      method: "get",
+      url: "https://api.podbean.com/v1/files/uploadAuthorize",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      params: {
+        access_token: jsonConfig.get("pbAccessToken"),
+        filename,
+        filesize,
+        content_type: "audio/mpeg"
+      }
+    }).then(d => {
+      let data = {
+        presigned_url: d.data.presigned_url,
+        media_key: d.data.file_key
+      };
+
+      mainWindow.send("gotTheKey", data);
+    });
+  } // if(file)
+});
+
