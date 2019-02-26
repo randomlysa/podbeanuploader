@@ -7,6 +7,8 @@ const ipcRenderer = electron.ipcRenderer;
 const Uppy = require("@uppy/core");
 const { DragDrop } = require("@uppy/react");
 
+require("@uppy/drag-drop/dist/style.css");
+
 // Upload process:
 // Drop file into Uppy dropzone
 // .send("authorizeUploadFile"): Uppy sends filename, filesize to Node/Electron.
