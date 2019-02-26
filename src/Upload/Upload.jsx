@@ -29,12 +29,20 @@ const uppy = Uppy({
 
 class Upload extends React.Component {
   state = {
-    acceptedFiles: []
+    acceptedFiles: [],
+    filePath: ""
   };
 
   componentDidMount() {
     uppy.on("file-added", file => {
+      const path = file.data.path
+        .split("/")
+        .slice(0, -1)
+        .join("/");
+
       this.props.setShowRename(true);
+      this.props.setFilePath(path);
+      this.props.setFileName(file.name);
 
       const dataForElectron = {
         filesize: file.size,
