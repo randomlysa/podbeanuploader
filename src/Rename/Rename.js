@@ -1,8 +1,29 @@
 import React, { useState } from "react";
 import moment from "moment";
+import styled from "@emotion/styled";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
+
+const StyledInput = styled.input`
+  width: 99%;
+  margin: 5px 0;
+  font-size: 16pt;
+  border-radius: 3px;
+  border: solid 1px #ddd;
+
+  :focus {
+    background: rgba(83, 183, 236, 0.4);
+  }
+`;
+
+const StyledSubmit = styled.input`
+  border: none;
+  font-size: 25pt;
+  padding: 2px 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+`;
 
 const Rename = props => {
   const [title, setTitle] = useState("");
@@ -51,32 +72,36 @@ const Rename = props => {
     }
   };
 
+  const renameButtonText = () => {
+    // this.props.uploadSucceeded
+  };
+
   return (
     <>
       <form onSubmit={handleFormSubmit}>
         Original Path:{" "}
-        <input type="text" defaultValue={props.filePath} disabled />
+        <StyledInput type="text" defaultValue={props.filePath} disabled />
         <br />
         Original Name:{" "}
-        <input type="text" defaultValue={props.fileName} disabled />
+        <StyledInput type="text" defaultValue={props.fileName} disabled />
         <hr />
         New Name:
         <br />
-        <input
+        <StyledInput
           type="text"
           onChange={handleChange}
           placeholder="Title"
           id="title"
         />
         <br />
-        <input
+        <StyledInput
           type="text"
           onChange={handleChange}
           placeholder="Speaker"
           id="speaker"
         />
         <br />
-        <input
+        <StyledInput
           type="text"
           onChange={handleChange}
           placeholder="Time"
@@ -84,7 +109,7 @@ const Rename = props => {
           id="time"
         />
         <br />
-        <input
+        <StyledInput
           type="text"
           onChange={handleChange}
           placeholder="Date"
@@ -92,7 +117,7 @@ const Rename = props => {
           id="date"
         />
         <br />
-        <input type="submit" value="Rename" />
+        <StyledSubmit type="submit" value="Rename" />
       </form>
     </>
   );
