@@ -1,25 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 const Rename = props => {
+  const [title, setTitle] = useState("");
+  const [speaker, setSpeaker] = useState("");
+  const [time, setTime] = useState("");
+  const [day, setDay] = useState("");
+
+  const handleChange = e => {
+    if (e.target.id === "title") setTitle(e.target.value);
+    if (e.target.id === "speaker") setSpeaker(e.target.value);
+    if (e.target.id === "time") setTime(e.target.value);
+    if (e.target.id === "day") setDay(e.target.value);
+  };
+
+  const handleFormSubmit = e => {
+    e.preventDefault();
+    const newFileName = `${title} - ${speaker} - ${time} - ${day}`;
+    ipcRenderer.send("renameFile", props.fileName, props.filePath, newFileName);
+  };
+
   return (
     <>
-      <form>
-        Original Path: <input type="text" defaultValue={props.filePath} />
+      <form onSubmit={handleFormSubmit}>
+        Original Path:{" "}
+        <input type="text" defaultValue={props.filePath} disabled />
         <br />
-        Original Name: <input type="text" defaultValue={props.fileName} />
+        Original Name:{" "}
+        <input type="text" defaultValue={props.fileName} disabled />
+        <hr />
+        New Name:
         <br />
-        New Name: <input type="text" placeholder="Title" />
+        <input
+          type="text"
+          onChange={handleChange}
+          placeholder="Title"
+          id="title"
+        />
         <br />
-        <input type="text" placeholder="Title" />
+        <input
+          type="text"
+          onChange={handleChange}
+          placeholder="Speaker"
+          id="speaker"
+        />
         <br />
-        <input type="text" placeholder="Speaker" />
+        <input
+          type="text"
+          onChange={handleChange}
+          placeholder="Time"
+          id="time"
+        />
         <br />
-        <input type="text" placeholder="Time" />
-        <br />
-        <input type="text" placeholder="Day" />
+        <input type="text" onChange={handleChange} placeholder="Day" id="day" />
         <br />
         <input type="submit" value="Rename" />
       </form>

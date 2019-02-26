@@ -1,5 +1,6 @@
 const { app, ipcMain, BrowserWindow, webContents } = require("electron");
 const axios = require("axios");
+const fs = require("fs");
 
 // const path = require("path");
 // const url = require("url");
@@ -136,4 +137,15 @@ ipcMain.on("publishEpisode", (event, media_key) => {
   })
     .then(d => console.warn(d))
     .catch(err => console.log(err));
+});
+
+ipcMain.on("renameFile", (event, fileName, filePath, newFileName) => {
+  const oldFile = `${filePath}/${fileName}`;
+  const newFile = `${filePath}/${newFileName}.mp3`;
+  fs.rename(oldFile, newFile, function errorOnRename(err) {
+    if (err) {
+      mainWindow.send("renameFileFail", err);
+    }
+    mainWindow.send("renameFileSuccess");
+  });
 });
