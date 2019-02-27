@@ -1,13 +1,12 @@
 import React from "react";
-import XHRUpload from "@uppy/xhr-upload";
+
+// Somehow I didn't notice last night that Fine Uploader is dead.
+// But I'm saving this anyway, just in case.
+import FineUploaderTraditional from "fine-uploader-wrappers";
+import Gallery from "react-fine-uploader";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
-
-const Uppy = require("@uppy/core");
-const { DragDrop } = require("@uppy/react");
-
-require("@uppy/drag-drop/dist/style.css");
 
 // Upload process:
 // Drop file into Uppy dropzone
@@ -19,87 +18,50 @@ require("@uppy/drag-drop/dist/style.css");
 // NOTE - stopping here as I can't test this as I've reached up upload limit for the day.
 // Node posts to https://api.podbean.com/v1/episodes with the info needed to publish.
 
-const uppy = Uppy({
-  autoProceed: true,
-  restrictions: {
-    maxNumberOfFiles: 1,
-    allowedFileTypes: [".mp3"]
+const uploader = new FineUploaderTraditional({
+  options: {
+    autoUpload: false,
+    request: {
+      method: "put",
+      requireSuccessJson: false,
+      customHeaders: {
+        "Content-Type": "audio/mpeg"
+      }
+    }
   }
 });
 
 class Upload extends React.Component {
   componentDidMount() {
-    uppy.on("file-added", file => {
-      const path = file.data.path
-        .split("/")
-        .slice(0, -1)
-        .join("/");
-
-      this.props.setShowRename(true);
-      this.props.setFilePath(path);
-      this.props.setFileName(file.name);
-
+    // on.validate:
+    // Called once for each selected, dropped, or addFiles submitted file.
+    uploader.on("validate", id => {
       const dataForElectron = {
-        filesize: file.size,
-        filename: file.name
+        filesize: id.size,
+        filename: id.name
       };
+      this.props.setShowRename(true);
 
-      // Todo: not sure if this is the best place to do this...
-      // assuming people drop in the right file most of the time?
-      // ipcRenderer.send("authorizeUploadFile", dataForElectron);
-
-      // Todo: is this needed?
-      uppy.setFileMeta(file.id, {
-        filename: file.name,
-        filesize: file.size,
-        content_type: "audio/mpeg"
-      });
+      // Todo: have an option to start auto upload?
+      ipcRenderer.send("authorizeUploadFile", dataForElectron);
     });
 
     ipcRenderer.on("gotTheKey", (event, data) => {
-      uppy.use(XHRUpload, {
-        method: "put",
-        endpoint: data.presigned_url
-      });
+      console.log(data);
+      uploader.methods.setEndpoint(data.presigned_url);
 
-      uppy.upload().then(result => {
-        console.info("Successful uploads:", result.successful);
+      uploader.methods.uploadStoredFiles();
 
-        // Set uploadSucceeded to true so the file can be renamed.
-        this.props.setUploadSucceeded(true);
-
-        // upload successful, need to post some data to publish it.
-        // ipcRenderer.send("publishEpisode", data.media_key);
-
-        if (result.failed.length > 0) {
-          console.error("Errors:");
-          result.failed.forEach(file => {
-            console.error(file.error);
-          });
-        }
-      });
+      ipcRenderer.send("publishEpisode", data.media_key, data.filename);
     });
 
-    uppy.on("upload-success", (file, body) => {
-      console.log("success, ", file, body);
+    // File can now be renamed.
+    uploader.on("complete", () => {
+      this.props.setUploadSucceeded(true);
     });
   }
-
   render() {
-    return (
-      <DragDrop
-        uppy={uppy}
-        locale={{
-          strings: {
-            // Text to show on the droppable area.
-            // `%{browse}` is replaced with a link that opens the system file selection dialog.
-            dropHereOr: "Drop here or %{browse}",
-            // Used as the label for the link that opens the system file selection dialog.
-            browse: "browse"
-          }
-        }}
-      />
-    );
+    return <Gallery uploader={uploader} />;
   }
 }
 
