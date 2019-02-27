@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 
-import Login from "./Login/Login";
 import Home from "./Home/Home";
 
 const electron = window.require("electron");
@@ -13,16 +12,12 @@ class App extends Component {
 
   componentDidMount() {
     ipcRenderer.on("tokenReceived", (event, token) => {
-      this.setState({ haveToken: true });
+      this.setState({ haveToken: !!token });
     });
   }
 
   render() {
-    if (this.state.haveToken) {
-      return <Home />;
-    } else {
-      return <Login />;
-    }
+    return <Home isLoggedIn={this.state.haveToken} />;
   }
 }
 
