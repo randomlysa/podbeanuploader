@@ -54,6 +54,7 @@ const Rename = props => {
 
   const sendRename = newFileName => {
     ipcRenderer.send("renameFile", props.fileName, props.filePath, newFileName);
+    ipcRenderer.send("publishEpisode", props.mediaKey, newFileName);
   };
 
   const handleFormSubmit = e => {
