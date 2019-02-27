@@ -64,6 +64,7 @@ class UppyUpload extends React.Component {
         endpoint: data.presigned_url
       });
 
+      this.props.setStatus("Uploading File");
       uppy.upload();
 
       uppy.on("error", () => {
@@ -76,6 +77,7 @@ class UppyUpload extends React.Component {
       });
 
       uppy.on("upload-success", (file, body) => {
+        this.props.setStatus("Uploading Succeeded");
         this.props.setUploadSucceeded(true);
         this.props.setMediaKey(data.media_key);
       });
