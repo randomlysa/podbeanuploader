@@ -112,6 +112,13 @@ ipcMain.on("authHTMLReceived", (_, authHTMLReceived) => {
   }
 });
 
+// Logout
+ipcMain.on("doLogout", () => {
+  jsonConfig.set("pbAccessToken", "");
+  jsonConfig.set("pbRefreshToken", "");
+  mainWindow.webContents.send("tokenReceived", null);
+});
+
 ipcMain.on("authorizeUploadFile", (event, file) => {
   const { filename, filesize } = file;
   if (file) {
