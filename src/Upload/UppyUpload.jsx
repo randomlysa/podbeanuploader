@@ -1,6 +1,5 @@
 import React from "react";
 import XHRUpload from "@uppy/xhr-upload";
-import styled from "@emotion/styled";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
