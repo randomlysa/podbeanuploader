@@ -1,6 +1,5 @@
 import React from "react";
 import XHRUpload from "@uppy/xhr-upload";
-import axios from "axios";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -64,8 +63,6 @@ class UppyUpload extends React.Component {
         method: "put",
         endpoint: data.presigned_url
       });
-
-      console.log(uppy.getState());
 
       uppy.upload();
 
