@@ -15,7 +15,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({ width: 800, height: 600 });
 
   mainWindow.loadURL(
-    // Commendted out the below code so I could have console.log
+    // Commented out the below code so I could have console.log
     "http://localhost:3000"
     // process.env.ELECTRON_START_URL ||
     //   url.format({
