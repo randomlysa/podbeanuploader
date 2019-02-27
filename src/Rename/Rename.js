@@ -42,6 +42,9 @@ const Rename = props => {
   const defaultTime = moment().format("dddd") + morningEvening;
   const defaultDate = moment().format("MM-DD-YYYY");
 
+  if (!time) setTime(defaultTime);
+  if (!date) setDate(defaultDate);
+
   const handleChange = e => {
     if (e.target.id === "title") setTitle(e.target.value);
     if (e.target.id === "speaker") setSpeaker(e.target.value);
