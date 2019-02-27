@@ -127,21 +127,26 @@ ipcMain.on("authorizeUploadFile", (event, file) => {
 });
 
 ipcMain.on("publishEpisode", (event, media_key) => {
+  // Haven't tested yet (reached API pubish limit) but this exact
+  // code with only a ID added after /episodes/ worked for updating
+  // an episode.
+
+  // url for updating:
+  // url: "https://api.podbean.com/v1/episodes/TBGQ6A90E06",
+  const template = `access_token=${jsonConfig.get(
+    "pbAccessToken"
+  )}&title='Title_Needs_To_Be_5_Chars'&status=publish&type=public`;
+
   axios({
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    method: "post",
-    url: "https://api.podbean.com/v1/episodes",
-    data: {
-      access_token: jsonConfig.get("pbAccessToken"),
-      title: "Title_Needs_To_Be_5_Chars",
-      content: "Time", // do I Need this?
-      status: "publish",
-      type: "public",
-      media_key: `"${media_key}"`
+    url: "https://api.podbean.com/v1/episodes/",
+    method: "POST",
+    data: template,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
     }
   })
-    .then(d => console.warn(d))
-    .catch(err => console.log(err));
+    .then(d => console.warn("SUCCESS : ", d))
+    .catch(err => console.log("FAIL : ", err));
 });
 
 ipcMain.on("renameFile", (event, fileName, filePath, newFileName) => {
