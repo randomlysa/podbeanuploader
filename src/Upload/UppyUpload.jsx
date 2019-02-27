@@ -75,27 +75,10 @@ class UppyUpload extends React.Component {
         console.log("failed files:", result.failed);
       });
 
-      // .then(result => {
-      //   console.log("success?");
-      //   // console.info("Successful uploads:", result.successful);
-
-      //   // Set uploadSucceeded to true so the file can be renamed.
-      //   this.props.setUploadSucceeded(true);
-
-      //   // upload successful, need to post some data to publish it.
-      //   // ipcRenderer.send("publishEpisode", data.media_key);
-
-      //   // if (result.failed.length > 0) {
-      //   //   console.error("Errors:");
-      //   //   result.failed.forEach(file => {
-      //   //     console.error(file.error);
-      //   //   });
-      //   // }
-      // });
-    });
-
-    uppy.on("upload-success", (file, body) => {
-      // console.log("success, ", file, body);
+      uppy.on("upload-success", (file, body) => {
+        this.props.setUploadSucceeded(true);
+        this.props.setMediaKey(data.media_key);
+      });
     });
   }
 
