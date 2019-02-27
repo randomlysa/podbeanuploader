@@ -14,25 +14,28 @@ const Home = () => {
   const [showRename, setShowRename] = useState(false);
   const [fileName, setFileName] = useState("");
   const [filePath, setFilePath] = useState("");
+  const [status, setStatus] = useState("Add a file!");
 
   // Have - Logout - Settings - Upload
   return (
     <div>
-      Home
-      <br />
+      <h1>Status: {status}</h1>
       <UppyUpload
         setShowRename={setShowRename}
         setFileName={setFileName}
         setFilePath={setFilePath}
         setUploadSucceeded={setUploadSucceeded}
         setMediaKey={setMediaKey}
+        setStatus={setStatus}
       />
+
       {showRename && (
         <Rename
           fileName={fileName}
           filePath={filePath}
           mediaKey={mediaKey}
           uploadSucceeded={uploadSucceeded}
+          setStatus={setStatus}
         />
       )}
     </div>
