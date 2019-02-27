@@ -16,6 +16,7 @@
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "electron": "^4.0.5",
+    "electron-context-menu": "^0.11.0",
     "electron-json-config": "^1.5.3",
     "electron-oauth2": "^3.0.0",
     "eslint": "^5.14.1",

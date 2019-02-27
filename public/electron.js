@@ -1,4 +1,6 @@
 const { app, ipcMain, BrowserWindow, webContents } = require("electron");
+const contextMenu = require("electron-context-menu");
+
 const axios = require("axios");
 const fs = require("fs");
 
@@ -9,6 +11,16 @@ const jsonConfig = require("electron-json-config");
 const myConfig = require("../src/config");
 
 let mainWindow, authWindow;
+
+contextMenu({
+  prepend: (params, browserWindow) => [
+    {
+      label: "Rainbow",
+      // Only show it when right-clicking images
+      visible: params.mediaType === "image"
+    }
+  ]
+});
 
 // Functions to create windows - main, auth.
 function createWindow() {
