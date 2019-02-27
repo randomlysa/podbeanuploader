@@ -87,8 +87,8 @@ ipcMain.on("podbeanOAuth", () => {
       `
         )
         .then(() => {
-      // Close window so data/token isn't seen. Guess it could be recorded using a screen grabber?
-        authWindow.destroy();
+          // Close window so data/token isn't seen. Guess it could be recorded using a screen grabber?
+          authWindow.destroy();
         });
     }
   });
@@ -117,6 +117,7 @@ ipcMain.on("authorizeUploadFile", (event, file) => {
       }
     }).then(d => {
       let data = {
+        filename: filename,
         presigned_url: d.data.presigned_url,
         media_key: d.data.file_key
       };
@@ -126,16 +127,26 @@ ipcMain.on("authorizeUploadFile", (event, file) => {
   } // if(file)
 });
 
-ipcMain.on("publishEpisode", (event, media_key) => {
+ipcMain.on("publishEpisode", (event, media_key, filename) => {
   // Haven't tested yet (reached API pubish limit) but this exact
   // code with only a ID added after /episodes/ worked for updating
   // an episode.
 
   // url for updating:
   // url: "https://api.podbean.com/v1/episodes/TBGQ6A90E06",
+
+  let title = filename;
+  // Remove .mp3 from filename.
+  if (title.includes(".mp3")) {
+    title = filename
+      .split("")
+      .slice(0, -4)
+      .join("");
+  }
+
   const template = `access_token=${jsonConfig.get(
     "pbAccessToken"
-  )}&title='Title_Needs_To_Be_5_Chars'&status=publish&type=public`;
+  )}&title='${title}'&status=publish&type=public`;
 
   axios({
     url: "https://api.podbean.com/v1/episodes/",
