@@ -80,13 +80,16 @@ ipcMain.on("podbeanOAuth", () => {
     didNav++;
     if (didNav === 2) {
       // https://stackoverflow.com/a/35022140/3996097
-      authWindow.webContents.executeJavaScript(`
+      authWindow.webContents
+        .executeJavaScript(
+          `
         require('electron').ipcRenderer.send('tokenReceived', document.body.innerHTML);
-      `);
+      `
+        )
+        .then(() => {
       // Close window so data/token isn't seen. Guess it could be recorded using a screen grabber?
-      setTimeout(() => {
         authWindow.destroy();
-      }, 50);
+        });
     }
   });
 });
