@@ -109,6 +109,7 @@ ipcMain.on("authHTMLReceived", (_, authHTMLReceived) => {
   jsonConfig.set("pbRefreshToken", success.refresh_token);
 
   mainWindow.webContents.send("tokenReceived", success.access_token);
+  }
 });
 
 ipcMain.on("authorizeUploadFile", (event, file) => {
