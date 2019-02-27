@@ -23,11 +23,13 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
+    "fine-uploader": "^5.16.2",
     "moment": "^2.24.0",
     "oauth-electron": "^1.1.12",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-dropzone": "^9.0.0",
+    "react-fine-uploader": "^1.1.1",
     "react-scripts": "2.1.5"
   },
   "scripts": {
