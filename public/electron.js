@@ -87,27 +87,24 @@ app.on("activate", () => {
 ipcMain.on("podbeanOAuth", () => {
   createAuthWindow();
 
-  let didNav = 0;
   authWindow.webContents.on("did-navigate", function(event, url) {
-    didNav++;
-    if (didNav === 2) {
       // https://stackoverflow.com/a/35022140/3996097
-      authWindow.webContents
-        .executeJavaScript(
+    authWindow.webContents.executeJavaScript(
           `
-        require('electron').ipcRenderer.send('tokenReceived', document.body.innerHTML);
+        require('electron').ipcRenderer.send('authHTMLReceived', document.body.innerHTML);
       `
-        )
-        .then(() => {
-          // Close window so data/token isn't seen. Guess it could be recorded using a screen grabber?
-          authWindow.destroy();
+    );
         });
-    }
   });
-});
 
-ipcMain.on("tokenReceived", (_, tokenReceived) => {
-  const success = JSON.parse(tokenReceived);
+// Finalize login if token received.
+ipcMain.on("authHTMLReceived", (_, authHTMLReceived) => {
+  if (
+    authHTMLReceived.includes("access_token") &&
+    authHTMLReceived.includes("refresh_token")
+  ) {
+    authWindow.destroy();
+    const success = JSON.parse(authHTMLReceived);
   jsonConfig.set("pbAccessToken", success.access_token);
   jsonConfig.set("pbRefreshToken", success.refresh_token);
 
