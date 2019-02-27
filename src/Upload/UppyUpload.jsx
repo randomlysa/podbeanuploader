@@ -1,5 +1,6 @@
 import React from "react";
 import XHRUpload from "@uppy/xhr-upload";
+import styled from "@emotion/styled";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -8,6 +9,7 @@ const Uppy = require("@uppy/core");
 const { DragDrop } = require("@uppy/react");
 
 require("@uppy/drag-drop/dist/style.css");
+require("./uppyMine.css");
 
 // Upload process:
 // Drop file into Uppy dropzone
@@ -30,6 +32,11 @@ const uppy = Uppy({
 class UppyUpload extends React.Component {
   componentDidMount() {
     uppy.on("file-added", file => {
+      // Shrink uppy.
+      // Todo - need some way to bring it back.
+      const uppyOnTheScreen = document.getElementsByClassName("uppy-Root");
+      uppyOnTheScreen[0].classList.add("shrinkUppy");
+
       const path = file.data.path
         .split("/")
         .slice(0, -1)
