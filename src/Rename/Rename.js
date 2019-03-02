@@ -55,7 +55,22 @@ const Rename = props => {
   const doRenameAndPublish = newFileName => {
     ipcRenderer.send("renameFile", props.fileName, props.filePath, newFileName);
     ipcRenderer.send("publishEpisode", props.mediaKey, newFileName);
-    props.setStatus("Rename and publish succeeded. All done!");
+
+    ipcRenderer.on("renameFileSuccess", () => {
+      props.setStatus("Rename Successful!");
+    });
+    ipcRenderer.on("renameFileFail", () => {
+      props.setStatus("Rename Failed!");
+    });
+
+    ipcRenderer.on("publishSuccess", () => {
+      props.setStatus("Rename and publish succeeded. All done!");
+    });
+
+    ipcRenderer.on("publishFail", (_, err) => {
+      console.warn(err);
+      props.setStatus(`Publish failed... ${err}`);
+    });
   };
 
   const handleFormSubmit = e => {
