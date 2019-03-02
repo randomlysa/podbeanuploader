@@ -173,8 +173,29 @@ ipcMain.on("publishEpisode", (event, media_key, filename) => {
       "Content-Type": "application/x-www-form-urlencoded"
     }
   })
-    .then(d => console.warn("SUCCESS : ", d))
-    .catch(err => console.log("FAIL : ", err));
+    .then(d => {
+      console.log("SUCCESS : ???");
+      const responseData = d.data.split(" : ");
+      if (
+        responseData[1].includes("error") &&
+        responseData[1].includes("error_description")
+      ) {
+        const { error, error_description } = JSON.parse(responseData[1]);
+        console.log(error);
+        console.log(error_description);
+        mainWindow.send("publishFail", error_description);
+      } else {
+        // Maybe we succeeded?
+        mainWindow.send("publishSuccess", d);
+        console.log(d);
+      }
+
+      console.log(template);
+    })
+    .catch(err => {
+      console.log("FAIL : ", err, err.code, err.response);
+      mainWindow.send("publishFail", err.code);
+    });
 });
 
 ipcMain.on("renameFile", (event, fileName, filePath, newFileName) => {
