@@ -137,7 +137,7 @@ const Rename = props => {
           id="date"
         />
         <br />
-        <StyledSubmit type="submit" value="Rename" />
+        <StyledSubmit type="submit" value="Rename & Publish!" />
       </form>
     </>
   );
