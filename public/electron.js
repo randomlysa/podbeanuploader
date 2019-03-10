@@ -175,7 +175,10 @@ ipcMain.on("publishEpisode", (event, media_key, filename) => {
   })
     .then(d => {
       console.log("SUCCESS : ???");
-      const responseData = d.data.split(" : ");
+      let responseData = d.data;
+      if (responseData.includes(" : ")) {
+        responseData = d.data.split(" : ");
+      }
       if (
         responseData[1].includes("error") &&
         responseData[1].includes("error_description")
