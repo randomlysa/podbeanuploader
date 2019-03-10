@@ -203,8 +203,10 @@ ipcMain.on("publishEpisode", (event, media_key, filename) => {
       console.log(template);
     })
     .catch(err => {
-      console.log("FAIL : ", err, err.code, err.response);
-      mainWindow.send("publishFail", err.code);
+      // This works for 'Exceeds max 3 posts per days limit.' (Although I'm pretty sure
+      // it's 1 post per day for a free account.)
+      console.log("FAIL : ", err.response.data);
+      mainWindow.send("publishFail", err.response.data.error_description);
     });
 });
 
