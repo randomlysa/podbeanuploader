@@ -83,7 +83,9 @@ class UppyUpload extends React.Component {
       });
 
       uppy.on("upload-success", (file, body) => {
-        this.props.setStatus("Uploading Succeeded");
+        this.props.setStatus(
+          "Uploading Succeeded. Type in your details and press Rename & Publish."
+        );
         this.props.setUploadSucceeded(true);
         this.props.setMediaKey(data.media_key);
       });
