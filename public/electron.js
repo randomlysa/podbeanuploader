@@ -132,7 +132,8 @@ ipcMain.on("authorizeUploadFile", (event, file) => {
         filesize,
         content_type: "audio/mpeg"
       }
-    }).then(d => {
+    })
+      .then(d => {
       let data = {
         filename: filename,
         presigned_url: d.data.presigned_url,
@@ -140,6 +141,9 @@ ipcMain.on("authorizeUploadFile", (event, file) => {
       };
 
       mainWindow.send("gotTheKey", data);
+      })
+      .catch(err => {
+        console.log("Error on authorization attempt: ", err);
     });
   } // if(file)
 });
