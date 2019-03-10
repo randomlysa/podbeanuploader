@@ -41,23 +41,30 @@ class Upload extends React.Component {
         filename: id.name
       };
       this.props.setShowRename(true);
+      console.log(id);
 
       // Todo: have an option to start auto upload?
-      ipcRenderer.send("authorizeUploadFile", dataForElectron);
+      // ipcRenderer.send("authorizeUploadFile", dataForElectron);
     });
 
     ipcRenderer.on("gotTheKey", (event, data) => {
       console.log(data);
       uploader.methods.setEndpoint(data.presigned_url);
 
+      // Start uploading.
       uploader.methods.uploadStoredFiles();
 
-      ipcRenderer.send("publishEpisode", data.media_key, data.filename);
-    });
-
-    // File can now be renamed.
-    uploader.on("complete", () => {
-      this.props.setUploadSucceeded(true);
+      uploader.on("complete", () => {
+        this.props.setUploadSucceeded(true);
+        // This is when the rename needs to happen. This allows the upload to start
+        // immediately, then once the file is on the server, rename the file locally
+        // and send a publish with the new filename as the title.
+        // I will assume that the file SHOULD be renamed, so don't .send this until
+        // the file is renamed. Otherwise episodes will be called strange file names
+        // and one of the main points of this is to rename and publish easily.
+        console.log("setting media key", data.media_key);
+        this.props.setMediaKey(data.media_key);
+      });
     });
   }
   render() {
