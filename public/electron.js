@@ -149,6 +149,9 @@ ipcMain.on("authorizeUploadFile", (event, file) => {
 });
 
 ipcMain.on("publishEpisode", (event, media_key, filename) => {
+  // Publish fails can take a long time before the API replies. Show a message
+  // that publish has started.
+  mainWindow.send("publishStart");
   // Haven't tested yet (reached API pubish limit) but this exact
   // code with only a ID added after /episodes/ worked for updating
   // an episode.

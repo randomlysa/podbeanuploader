@@ -63,6 +63,10 @@ const Rename = props => {
       props.setStatus("Rename Failed!");
     });
 
+    ipcRenderer.on("publishStart", () => {
+      props.setStatus("Publish started...");
+    });
+
     ipcRenderer.on("publishSuccess", () => {
       props.setStatus("Rename and publish succeeded. All done!");
     });
