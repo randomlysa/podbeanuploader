@@ -170,7 +170,7 @@ ipcMain.on("publishEpisode", (event, media_key, filename) => {
 
   const template = `access_token=${jsonConfig.get(
     "pbAccessToken"
-  )}&title='${title}'&status=publish&type=public&media_key=${media_key}`;
+  )}&title=${title}&status=publish&type=public&media_key=${media_key}`;
 
   axios({
     url: "https://api.podbean.com/v1/episodes/",
