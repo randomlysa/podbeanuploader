@@ -22,6 +22,23 @@ contextMenu({
   ]
 });
 
+// Helper(s) - check access token, (add later - refresh access token)
+const checkAccessToken = async accessToken => {
+  return await axios({
+    url: "https://api.podbean.com/v1/oauth/debugToken",
+    params: {
+      access_token: accessToken
+    },
+
+    auth: {
+      username: myConfig.clientId,
+      password: myConfig.clientSecret
+    }
+  })
+    .then(r => r.data) // Only need r.data.is_valid for now.
+    .catch(err => console.log("Token catch: ", err.response));
+};
+
 // Functions to create windows - main, auth.
 function createWindow() {
   mainWindow = new BrowserWindow({ width: 800, height: 600 });
@@ -39,7 +56,10 @@ function createWindow() {
 
   mainWindow.webContents.on("did-finish-load", () => {
     const accessToken = jsonConfig.get("pbAccessToken");
-    mainWindow.webContents.send("tokenReceived", accessToken);
+    // Check if token is still valid and load main window.
+    checkAccessToken(accessToken).then(r => {
+      mainWindow.webContents.send("tokenReceived", r.is_valid);
+    });
   });
 
   mainWindow.on("closed", () => {

@@ -11,8 +11,9 @@ class App extends Component {
   };
 
   componentDidMount() {
-    ipcRenderer.on("tokenReceived", (event, token) => {
-      this.setState({ haveToken: !!token });
+    // When the app runs, token.is_valid is checked and sent here.
+    ipcRenderer.on("tokenReceived", (event, tokenIsValid) => {
+      this.setState({ haveToken: tokenIsValid });
     });
   }
 
