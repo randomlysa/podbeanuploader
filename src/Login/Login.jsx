@@ -69,7 +69,7 @@ const Login = props => {
   );
 
   // Initially, show "loading" (checking token) instead of Login button.
-  if (props.loaded) {
+  if (props.loading) {
     return loadingNotButton;
   } else if (props.isLoggedIn) {
     return logoutButton;
