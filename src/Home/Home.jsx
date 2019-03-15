@@ -43,7 +43,7 @@ const Home = props => {
       </div>
     );
   } else {
-    return <Login isLoggedIn={props.isLoggedIn} />;
+    return <Login isLoggedIn={props.isLoggedIn} loading={props.loading} />;
   }
 };
 

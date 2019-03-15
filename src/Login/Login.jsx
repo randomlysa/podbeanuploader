@@ -1,6 +1,15 @@
 import React from "react";
 import styled from "@emotion/styled";
 
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 200%;
+`;
+
 const Welcome = styled.div`
   position: absolute;
   top: 20%;
@@ -25,8 +34,12 @@ const Button = styled.button`
   }
 `;
 
-const electron = window.require("electron");
-const ipcRenderer = electron.ipcRenderer;
+let electron = "";
+let ipcRenderer = "";
+if (process.env === "dev") {
+  electron = window.require("electron");
+  ipcRenderer = electron.ipcRenderer;
+}
 
 const Login = props => {
   const doLogin = () => {
@@ -34,6 +47,8 @@ const Login = props => {
   };
 
   const doLogout = () => ipcRenderer.send("doLogout");
+
+  const loadingNotButton = <LoadingContainer>Loading...</LoadingContainer>;
 
   const loginButton = (
     <Welcome>
@@ -50,7 +65,10 @@ const Login = props => {
     </Button>
   );
 
-  if (props.isLoggedIn) {
+  // Initially, show "loading" (checking token) instead of Login button.
+  if (props.loaded) {
+    return loadingNotButton;
+  } else if (props.isLoggedIn) {
     return logoutButton;
   } else {
     return loginButton;

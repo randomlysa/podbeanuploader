@@ -7,18 +7,21 @@ const ipcRenderer = electron.ipcRenderer;
 
 class App extends Component {
   state = {
-    haveToken: false
+    haveToken: null,
+    loading: true
   };
 
   componentDidMount() {
     // When the app runs, token.is_valid is checked and sent here.
     ipcRenderer.on("tokenReceived", (event, tokenIsValid) => {
-      this.setState({ haveToken: tokenIsValid });
+      this.setState({ haveToken: tokenIsValid, loading: false });
     });
   }
 
   render() {
-    return <Home isLoggedIn={this.state.haveToken} />;
+    return (
+      <Home isLoggedIn={this.state.haveToken} loading={this.state.loading} />
+    );
   }
 }
 
