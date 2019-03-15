@@ -133,7 +133,8 @@
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
+      "electron": "<rootDir>/src/__mock__/electron.js"
     },
     "moduleFileExtensions": [
       "web.js",

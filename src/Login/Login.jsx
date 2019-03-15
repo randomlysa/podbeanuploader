@@ -36,7 +36,10 @@ const Button = styled.button`
 
 let electron = "";
 let ipcRenderer = "";
-if (process.env === "dev") {
+if (process.env.NODE_ENV === "test") {
+  electron = require("electron");
+  ipcRenderer = electron.ipcRenderer;
+} else {
   electron = window.require("electron");
   ipcRenderer = electron.ipcRenderer;
 }

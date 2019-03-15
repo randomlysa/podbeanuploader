@@ -1,8 +1,15 @@
 import React from "react";
 import XHRUpload from "@uppy/xhr-upload";
 
-const electron = window.require("electron");
-const ipcRenderer = electron.ipcRenderer;
+let electron = "";
+let ipcRenderer = "";
+if (process.env.NODE_ENV === "test") {
+  electron = require("electron");
+  ipcRenderer = electron.ipcRenderer;
+} else {
+  electron = window.require("electron");
+  ipcRenderer = electron.ipcRenderer;
+}
 
 const Uppy = require("@uppy/core");
 const { DragDrop } = require("@uppy/react");

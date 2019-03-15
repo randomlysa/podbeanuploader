@@ -2,8 +2,15 @@ import React, { Component } from "react";
 
 import Home from "./Home/Home";
 
-const electron = window.require("electron");
-const ipcRenderer = electron.ipcRenderer;
+let electron = "";
+let ipcRenderer = "";
+if (process.env.NODE_ENV === "test") {
+  electron = require("electron");
+  ipcRenderer = electron.ipcRenderer;
+} else {
+  electron = window.require("electron");
+  ipcRenderer = electron.ipcRenderer;
+}
 
 class App extends Component {
   state = {
