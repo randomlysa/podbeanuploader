@@ -65,10 +65,5 @@
     "directories": {
       "buildResources": "public"
     }
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "electron": "<rootDir>/src/components/tests/mock/electron.js"
-    }
   }
 }
