@@ -24,3 +24,4 @@ yarn-error.log*
 
 config.js
 _ignore/*
+/Podbean Uploader-darwin-x64/*
