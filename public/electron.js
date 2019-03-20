@@ -45,13 +45,13 @@ function createWindow() {
 
   mainWindow.loadURL(
     // Commented out the below code so I could have console.log
-    "http://localhost:3000"
-    // process.env.ELECTRON_START_URL ||
-    //   url.format({
-    //     pathname: path.join(__dirname, "/../build/index.html"),
-    //     protocol: "file:",
-    //     slashes: true
-    //   })
+    // "http://localhost:3000"
+    process.env.ELECTRON_START_URL ||
+      url.format({
+        pathname: path.join(__dirname, "./index.html"),
+        protocol: "file:",
+        slashes: true
+      })
   );
 
   mainWindow.webContents.on("did-finish-load", () => {
@@ -108,14 +108,14 @@ ipcMain.on("podbeanOAuth", () => {
   createAuthWindow();
 
   authWindow.webContents.on("did-navigate", function(event, url) {
-      // https://stackoverflow.com/a/35022140/3996097
+    // https://stackoverflow.com/a/35022140/3996097
     authWindow.webContents.executeJavaScript(
-          `
+      `
         require('electron').ipcRenderer.send('authHTMLReceived', document.body.innerHTML);
       `
     );
-        });
   });
+});
 
 // Finalize login if token received.
 ipcMain.on("authHTMLReceived", (_, authHTMLReceived) => {
@@ -125,10 +125,10 @@ ipcMain.on("authHTMLReceived", (_, authHTMLReceived) => {
   ) {
     authWindow.destroy();
     const success = JSON.parse(authHTMLReceived);
-  jsonConfig.set("pbAccessToken", success.access_token);
-  jsonConfig.set("pbRefreshToken", success.refresh_token);
+    jsonConfig.set("pbAccessToken", success.access_token);
+    jsonConfig.set("pbRefreshToken", success.refresh_token);
 
-  mainWindow.webContents.send("tokenReceived", success.access_token);
+    mainWindow.webContents.send("tokenReceived", success.access_token);
   }
 });
 
@@ -154,17 +154,17 @@ ipcMain.on("authorizeUploadFile", (event, file) => {
       }
     })
       .then(d => {
-      let data = {
-        filename: filename,
-        presigned_url: d.data.presigned_url,
-        media_key: d.data.file_key
-      };
+        let data = {
+          filename: filename,
+          presigned_url: d.data.presigned_url,
+          media_key: d.data.file_key
+        };
 
-      mainWindow.send("gotTheKey", data);
+        mainWindow.send("gotTheKey", data);
       })
       .catch(err => {
         console.log("Error on authorization attempt: ", err);
-    });
+      });
   } // if(file)
 });
 
